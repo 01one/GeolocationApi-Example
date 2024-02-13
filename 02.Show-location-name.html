@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <button onclick="getLocation()">Get Location</button>
+    <p id="locationName"></p>
+
+    <script>
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(getAddress);
+            } else {
+                alert('Geolocation is not supported by your browser');
+            }
+        }
+
+        function getAddress(position) {
+            let latitude = position.coords.latitude;
+            let longitude = position.coords.longitude;
+            let apiUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`;
+
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    let locationName = data.display_name;
+                    document.getElementById('locationName').innerText = 'Location: ' + locationName;
+                })
+                .catch(error => {
+                    console.log('Error:', error);
+                });
+        }
+    </script>
+</body>
+</html>
